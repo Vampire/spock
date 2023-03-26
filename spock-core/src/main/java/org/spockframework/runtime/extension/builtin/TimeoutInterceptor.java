@@ -51,14 +51,34 @@ public class TimeoutInterceptor implements IMethodInterceptor {
         long waitMillis = timeout.unit().toMillis(timeout.value());
         boolean synced = false;
 
+        boolean syncedWithFeature = false;
         try {
           startLatch.countDown();
-          startLatch.await(5, TimeUnit.SECONDS);
+          syncedWithFeature = startLatch.await(5, TimeUnit.SECONDS);
         } catch (InterruptedException ignored) {
+          // this is our own thread, so we can ignore the interruption safely
+        }
+        if (!syncedWithFeature) {
           System.out.printf("[spock.lang.Timeout] Could not sync with Feature for method '%s'", invocation.getMethod().getName());
         }
 
+        while (waitMillis > 0) {
+          long waitStart = System.nanoTime();
+          try {
+            synced = sync.offer(stackTrace, waitMillis, TimeUnit.MILLISECONDS);
+          } catch (InterruptedException ignored) {
+            // this is our own thread, so we can ignore the interruption safely and continue the remaining waiting
+            waitMillis -= TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - waitStart);
+            continue;
+          }
+          break;
+        }
+        if (!synced) {
+          stackTrace = mainThread.getStackTrace();
+          waitMillis = 250;
+        }
         while (!synced) {
+          mainThread.interrupt();
           try {
             synced = sync.offer(stackTrace, waitMillis, TimeUnit.MILLISECONDS);
           } catch (InterruptedException ignored) {
@@ -66,26 +86,22 @@ public class TimeoutInterceptor implements IMethodInterceptor {
             // the latter returns. Once this mission has been accomplished, this thread will die quickly
           }
           if (!synced) {
-            if (stackTrace.length == 0) {
-              stackTrace = mainThread.getStackTrace();
-              waitMillis = 250;
-            } else {
-              waitMillis *= 2;
-              System.out.printf("[spock.lang.Timeout] Method '%s' has not yet returned - interrupting. Next try in %1.2f seconds.\n",
-                  invocation.getMethod().getName(), waitMillis / 1000.);
-            }
-            mainThread.interrupt();
+            waitMillis *= 2;
+            System.out.printf("[spock.lang.Timeout] Method '%s' has not yet returned - interrupting. Next try in %1.2f seconds.\n",
+              invocation.getMethod().getName(), waitMillis / 1000.);
           }
         }
       }
     }.start();
 
-
+    boolean syncedWithWatcher = false;
     try {
       startLatch.countDown();
-      startLatch.await(5, TimeUnit.SECONDS);
-    } catch (InterruptedException ignored) {
-      System.out.printf("[spock.lang.Timeout] Could not sync with Watcher for method '%s'", invocation.getMethod().getName());
+      syncedWithWatcher = startLatch.await(5, TimeUnit.SECONDS);
+    } finally {
+      if (!syncedWithWatcher) {
+        System.out.printf("[spock.lang.Timeout] Could not sync with Watcher for method '%s'", invocation.getMethod().getName());
+      }
     }
 
     Throwable saved = null;

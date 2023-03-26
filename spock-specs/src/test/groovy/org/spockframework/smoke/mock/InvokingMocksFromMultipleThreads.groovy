@@ -42,7 +42,7 @@ class InvokingMocksFromMultipleThreads extends Specification {
         }
       }
     }
-    latch.await(10, TimeUnit.SECONDS)
+    assert latch.await(10, TimeUnit.SECONDS) : 'Timeout expired'
 
     then:
     interaction {
@@ -68,7 +68,7 @@ class InvokingMocksFromMultipleThreads extends Specification {
         }
       }
     }
-    latch.await(10, TimeUnit.SECONDS)
+    assert latch.await(10, TimeUnit.SECONDS) : 'Timeout expired'
 
     then:
     interaction {
@@ -93,7 +93,7 @@ class InvokingMocksFromMultipleThreads extends Specification {
         }
       }
     }
-    latch.await(10, TimeUnit.SECONDS)
+    assert latch.await(10, TimeUnit.SECONDS) : 'Timeout expired'
 
     then:
     interaction {
