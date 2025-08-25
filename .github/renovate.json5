@@ -34,6 +34,13 @@
       matchPackageNames: ["/^org.spockframework:spock-/"],
       matchCurrentVersion: "/-groovy-4\\.0$/",
       allowedVersions: "/-groovy-4\\.0$/"
+    },
+    {
+      groupName: "actions-checkout",
+      matchPackageNames: [
+        "actions/checkout",
+        "actions:checkout___major"
+      ]
     }
   ]
 }
