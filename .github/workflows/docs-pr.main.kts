@@ -22,8 +22,8 @@
 // work-around for https://youtrack.jetbrains.com/issue/KT-69145
 @file:DependsOn("io.github.typesafegithub:github-workflows-kt:3.4.0")
 
-@file:Repository("https://bindings.krzeminski.it/")
-@file:DependsOn("actions:checkout___major:[v4,v5-alpha)")
+@file:Repository("http://127.0.0.1:8080")
+@file:DependsOn("actions:checkout___major:[binding_version_v2___v4,binding_version_v2___v5)")
 @file:DependsOn("actions:upload-artifact___major:[v4,v5-alpha)")
 
 import io.github.typesafegithub.workflows.actions.actions.Checkout
