@@ -23,12 +23,14 @@
 @file:DependsOn("io.github.typesafegithub:github-workflows-kt:3.4.0")
 
 @file:Repository("http://127.0.0.1:8080")
-@file:DependsOn("actions:checkout___major:[binding_version_v2___v4,binding_version_v2___v5)")
+@file:DependsOn("actions:checkout___major:[binding_version_v1___v4,binding_version_v1___v5)")
 @file:DependsOn("actions:upload-artifact___major:[v4,v5-alpha)")
+@file:DependsOn("Vampire:setup-wsl:binding_version_v1___v6")
 
 import io.github.typesafegithub.workflows.actions.actions.Checkout
 import io.github.typesafegithub.workflows.actions.actions.Checkout.FetchDepth
 import io.github.typesafegithub.workflows.actions.actions.UploadArtifact
+import io.github.typesafegithub.workflows.actions.vampire.SetupWsl
 import io.github.typesafegithub.workflows.domain.Concurrency
 import io.github.typesafegithub.workflows.domain.RunnerType.UbuntuLatest
 import io.github.typesafegithub.workflows.domain.triggers.MergeGroup
@@ -73,6 +75,9 @@ workflow(
             action = SetupBuildEnv(
                 additionalJavaVersion = Matrix.axes.javaVersions.last()
             )
+        )
+        uses(
+            action = SetupWsl()
         )
         run(
             name = "Install GraphViz",

@@ -44,12 +44,14 @@ jobs:
       with:
         additional-java-version: '21'
     - id: 'step-2'
+      uses: 'Vampire/setup-wsl@v6'
+    - id: 'step-3'
       name: 'Install GraphViz'
       run: 'sudo apt update && sudo apt install --yes graphviz'
-    - id: 'step-3'
+    - id: 'step-4'
       name: 'Build Docs'
       run: './gradlew --stacktrace asciidoctor javadoc "-Dvariant=4.0" "-DjavaVersion=21"'
-    - id: 'step-4'
+    - id: 'step-5'
       name: 'Archive and upload docs'
       uses: 'actions/upload-artifact@v4'
       with:
