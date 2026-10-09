@@ -454,6 +454,12 @@ public class WhereBlockRewriter {
     return result;
   }
 
+  private void transplantStcAnnotations(MethodNode method) {
+    whereBlock.getParent().getAst().getAnnotations(resources.getAstNodeCache().CompileDynamic).forEach(method::addAnnotation);
+    whereBlock.getParent().getAst().getAnnotations(resources.getAstNodeCache().TypeChecked).forEach(method::addAnnotation);
+    whereBlock.getParent().getAst().getAnnotations(resources.getAstNodeCache().CompileStatic).forEach(method::addAnnotation);
+  }
+
   private void createDataProviderMethod(Expression dataProviderExpr, int nextDataVariableIndex, boolean addDataTableParameters) {
     instanceFieldAccessChecker.check(dataProviderExpr);
 
@@ -480,6 +486,7 @@ public class WhereBlockRewriter {
         new BlockStatement(dataProviderStats, null));
 
     method.addAnnotation(createDataProviderAnnotation(dataProviderExpr, nextDataVariableIndex, addDataTableParameters));
+    transplantStcAnnotations(method);
     whereBlock.getParent().getParent().getAst().addMethod(method);
   }
 
@@ -969,6 +976,7 @@ public class WhereBlockRewriter {
       ClassNode.EMPTY_ARRAY,
       blockStat);
     dataProcessorMethod.addAnnotation(createDataProcessorAnnotation());
+    transplantStcAnnotations(dataProcessorMethod);
 
     whereBlock.getParent().getParent().getAst().addMethod(dataProcessorMethod);
   }
@@ -1043,6 +1051,7 @@ public class WhereBlockRewriter {
       Parameter.EMPTY_ARRAY,
       ClassNode.EMPTY_ARRAY,
       new BlockStatement(Arrays.asList(valuesDecl, tryCatch), null));
+    transplantStcAnnotations(method);
 
     whereBlock.getParent().getParent().getAst().addMethod(method);
   }
@@ -1091,6 +1100,7 @@ public class WhereBlockRewriter {
       Parameter.EMPTY_ARRAY,
       ClassNode.EMPTY_ARRAY,
       blockStat);
+    transplantStcAnnotations(dataVariableMultiplicationsMethod);
 
     whereBlock.getParent().getParent().getAst().addMethod(dataVariableMultiplicationsMethod);
   }
@@ -1127,6 +1137,7 @@ public class WhereBlockRewriter {
         createWhereVariableParameters()),
       ClassNode.EMPTY_ARRAY,
       blockStat);
+    transplantStcAnnotations(filterMethod);
 
     filterBlock.getParent().getParent().getAst().addMethod(filterMethod);
   }

@@ -16,15 +16,17 @@
 
 package org.spockframework.compiler;
 
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.classgen.VariableScopeVisitor;
+import org.codehaus.groovy.control.CompilePhase;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.transform.ASTTransformation;
+import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.spockframework.compiler.model.Spec;
 import org.spockframework.util.VersionChecker;
 
 import java.util.List;
-
-import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.control.*;
-import org.codehaus.groovy.transform.*;
 
 /**
  * AST transformation for rewriting Spock specifications. Runs after phase
@@ -59,7 +61,11 @@ public class SpockTransform implements ASTTransformation {
         List<ClassNode> classes = sourceUnit.getAST().getClasses();
 
         for (ClassNode clazz : classes)
-          if (isSpec(clazz)) processSpec(sourceUnit, clazz, errorReporter, sourceLookup);
+          if (isSpec(clazz)) {
+            processSpec(sourceUnit, clazz, errorReporter, sourceLookup);
+          } else {
+            new StcAnnotationsUsageVisitor(nodeCache, sourceUnit).visitClass(clazz);
+          }
       }
     }
 
@@ -69,6 +75,7 @@ public class SpockTransform implements ASTTransformation {
 
     void processSpec(SourceUnit sourceUnit, ClassNode clazz, ErrorReporter errorReporter, SourceLookup sourceLookup) {
       try {
+        new StcAnnotationsVisitor(nodeCache, sourceUnit).visitClass(clazz);
         Spec spec = new SpecParser(nodeCache, errorReporter).build(clazz);
         spec.accept(new SpecRewriter(nodeCache, sourceLookup, errorReporter));
         spec.accept(new SpecAnnotator(nodeCache));
@@ -78,8 +85,8 @@ public class SpockTransform implements ASTTransformation {
         }
       } catch (Exception e) {
         errorReporter.error(
-            "Unexpected error during compilation of spec '%s'. Maybe you have used invalid Spock syntax? Anyway, please file a bug report at https://issues.spockframework.org.",
-            e, clazz.getName());
+          "Unexpected error during compilation of spec '%s'. Maybe you have used invalid Spock syntax? Anyway, please file a bug report at https://issues.spockframework.org.",
+          e, clazz.getName());
       }
     }
   }
