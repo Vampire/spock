@@ -22,6 +22,7 @@ import org.mockito.exceptions.base.MockitoException
 import spock.lang.Issue
 import spock.lang.Requires
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 import spock.mock.DetachedMockFactory
 import spock.util.environment.Jvm
 
@@ -202,6 +203,7 @@ class MockitoMockMakerSpec extends Specification {
 Please ensure that the target class has a 0-arg constructor."""
   }
 
+  @SpockCompileDynamic
   def "Additional interfaces"() {
     when:
     ArrayList<Integer> mock = Mock(mockMaker: mockito, additionalInterfaces: [Runnable])

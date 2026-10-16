@@ -21,6 +21,7 @@ import org.spockframework.runtime.InvalidSpecException
 import org.spockframework.runtime.SpockExecutionException
 import spock.lang.Rollup
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 import spock.lang.Unroll
 
 class UprolledFeatureMethods extends EmbeddedSpecification {
@@ -153,6 +154,7 @@ def method() {
     thrown(InvalidSpecException)
   }
 
+  @SpockCompileDynamic
   def "method-level uproll annotation wins over configuration script"() {
     given:
     runner.configurationScript {
@@ -176,6 +178,7 @@ def method() {
     result.testEvents().started().list().testDescriptor.displayName == ["method"]
   }
 
+  @SpockCompileDynamic
   def "class-level uproll annotation wins over configuration script"() {
     given:
     runner.configurationScript {
@@ -201,6 +204,7 @@ class Foo extends Specification {
     result.testEvents().started().list().testDescriptor.displayName == ["method"]
   }
 
+  @SpockCompileDynamic
   def "rollup annotations are not inheritable"() {
     given:
     runner.configurationScript {

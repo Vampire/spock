@@ -16,7 +16,9 @@
 package org.spockframework.builder
 
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 
+@SpockCompileDynamic
 class PojoBuilderSpec extends Specification {
   Person person = new Person()
   PojoBuilder builder = new PojoBuilder()

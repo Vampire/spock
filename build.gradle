@@ -102,6 +102,10 @@ allprojects {
       }
     }
   }
+
+  tasks.withType(GroovyCompile).configureEach {
+    groovyOptions.configurationScript = rootProject.layout.projectDirectory.file('groovyc.groovy').asFile
+  }
 }
 
 apply from: script("ide")

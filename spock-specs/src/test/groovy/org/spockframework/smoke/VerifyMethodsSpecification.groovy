@@ -14,6 +14,7 @@
 
 package org.spockframework.smoke
 
+import groovy.transform.CompileDynamic
 import org.spockframework.runtime.ConditionNotSatisfiedError
 import spock.lang.FailsWith
 import spock.lang.Specification
@@ -27,6 +28,8 @@ class VerifyMethodsSpecification extends Specification {
     x > 0
   }
 
+  //TODO: Why? Can we fix this?
+  @CompileDynamic
   private static class Assertions {
     @Verify
     private static isPositive(int x) {

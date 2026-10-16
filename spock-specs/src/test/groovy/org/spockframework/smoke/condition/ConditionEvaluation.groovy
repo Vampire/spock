@@ -23,6 +23,7 @@ import spock.lang.FailsWith
 import spock.lang.Issue
 import spock.lang.Snapshot
 import spock.lang.Snapshotter
+import spock.lang.SpockCompileDynamic
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -71,6 +72,7 @@ class ConditionEvaluation extends EmbeddedSpecification {
     ["1", "22"]*.size() == [1, 2]
   }
 
+  @SpockCompileDynamic
   def "MethodCallExpression with safe operator"() {
     def a = null
 
@@ -172,7 +174,7 @@ class ConditionEvaluation extends EmbeddedSpecification {
     def x = 0
 
     when:
-    def test = {it -> assert ++x == 1; {it2 -> assert ++x == 2 }(); {it3 -> assert ++x == 3 } }()
+    def test = { -> assert ++x == 1; { -> assert ++x == 2 }(); { -> assert ++x == 3 } }()
 
     then:
     x == 2
@@ -276,15 +278,16 @@ class ConditionEvaluation extends EmbeddedSpecification {
     ([1, 2, 3] as int[]).size() == 3
   }
 
-  private add(x, y) { x + y }
+  private add(int x, int y) { x + y }
 
+  @SpockCompileDynamic
   def "SpreadExpression"() {
     expect:
     add(* [1, 2]) == 3
     [1, * [2, * [3, * [4]]]] == [1, 2, 3, 4]
   }
 
-  private sub(args) { args.x - args.y }
+  private sub(Map args) { (args.x as int) - (args.y as int) }
 
   def "SpreadMapExpression"() {
     expect:
@@ -483,7 +486,7 @@ class ConditionEvaluation extends EmbeddedSpecification {
 
   def "opt-out of implicit-condition handling won't fail for falsy values"() {
     expect:
-    !!aList.each { assert it > 0 }
+    !!aList.each { int it -> assert it > 0 }
 
     where:
     aList << [[1], []]
@@ -537,18 +540,18 @@ class ConditionEvaluation extends EmbeddedSpecification {
   }
 
   static class Properties {
-    def getNext() { this }
+    Properties getNext() { this }
 
     def x
   }
 
   static class Attributes {
     def x
-    def y
+    Attributes y
   }
 
   static class MethodPointers {
-    def inc(x) { x + 1 }
+    def inc(int x) { x + 1 }
   }
 
   static class Person {

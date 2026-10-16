@@ -21,6 +21,7 @@ import spock.lang.Requires
 import spock.lang.Specification
 import spock.lang.Issue
 import spock.lang.FailsWith
+import spock.lang.SpockCompileDynamic
 
 /**
  * @author Peter Niederwieser
@@ -165,6 +166,7 @@ class JavaMocksForGroovyClasses extends Specification {
   }
 
   // TODO: swallowed when mocking static inner class because the latter implements methodMissing/propertyMissing
+  @SpockCompileDynamic
   @FailsWith(MissingMethodException)
   def "dynamic methods are considered to not exist"() {
     when:
@@ -183,6 +185,7 @@ class JavaMocksForGroovyClasses extends Specification {
   }
 
   // TODO: swallowed when mocking static inner class because the latter implements methodMissing/propertyMissing
+  @SpockCompileDynamic
   @FailsWith(MissingPropertyException)
   def "dynamic properties are considered to not exist"() {
     when:
@@ -357,6 +360,7 @@ class JavaMocksForGroovyClasses extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/1256")
+  @SpockCompileDynamic
   def "Mock object non-boolean (is) pseudo accessor via dot-notation" () {
     given:
     ExampleData mockData = Mock(ExampleData)

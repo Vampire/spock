@@ -63,7 +63,7 @@ class Foo extends Specification {
     def result = runner.runClass(clazz)
 
     then:
-    clazz.log == ""
+    clazz.getDeclaredField('log').get(clazz) == ""
     result.containersSkippedCount == 1
   }
 
@@ -83,7 +83,7 @@ def feature3() { setup: log += "3" }
     def result = runner.runClass(clazz)
 
     then:
-    clazz.log == "2"
+    clazz.getDeclaredField('log').get(clazz) == "2"
     result.testsSucceededCount == 1
     result.testsSkippedCount == 2
   }

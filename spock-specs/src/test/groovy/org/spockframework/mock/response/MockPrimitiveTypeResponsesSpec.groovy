@@ -17,6 +17,7 @@ package org.spockframework.mock.response
 
 import spock.lang.Issue
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 
 class MockPrimitiveTypeResponsesSpec extends Specification {
   private static final String SUCCESS = "success"
@@ -34,6 +35,7 @@ class MockPrimitiveTypeResponsesSpec extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/1974")
+  @SpockCompileDynamic
   def "Mock Response TypeArgumentConstraint with different primitive types Issue #1974"() {
     given:
     ObjClass client = Mock()

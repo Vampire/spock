@@ -21,6 +21,7 @@ class MockingAndBridgeMethods extends Specification {
   // ByteBuddy Transforms methods so that they are not bridge methods anymore
   boolean isCglib = Boolean.getBoolean("org.spockframework.mock.ignoreByteBuddy")
 
+  @SpockCompileDynamic
   def "bridge methods are not intercepted"() {
     def comparator = Mock([:], MyComparator)
 
@@ -57,6 +58,7 @@ class MockingAndBridgeMethods extends Specification {
 
 
   @Issue('https://github.com/spockframework/spock/issues/122')
+  @SpockCompileDynamic
   def "bridge methods that override concrete methods in a supertype are still intercepted - check mocking"() {
     given:
     def di = Mock(DiscountedItem)
@@ -81,6 +83,7 @@ class MockingAndBridgeMethods extends Specification {
 
 
   @Issue('https://github.com/spockframework/spock/issues/122')
+  @SpockCompileDynamic
   def "check mocking of non-bridge methods"() {
     given:
     def di = Mock(DiscountedItem)
@@ -104,6 +107,7 @@ class MockingAndBridgeMethods extends Specification {
   }
 
   @Issue('https://github.com/spockframework/spock/issues/122')
+  @SpockCompileDynamic
   def "bridge methods that override concrete methods in a supertype are still intercepted - check stubbing"() {
     given:
     def di = Mock(DiscountedItem) {
@@ -129,6 +133,7 @@ class MockingAndBridgeMethods extends Specification {
   }
 
   @Issue('https://github.com/spockframework/spock/issues/122')
+  @SpockCompileDynamic
   def "bridge methods that override concrete methods in a supertype are still intercepted - check spying"() {
     given:
     def di = Spy(DiscountedItem) {

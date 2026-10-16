@@ -1,6 +1,7 @@
 package org.spockframework.smoke.extension
 
 import spock.lang.Isolated
+import spock.lang.SpockCompileDynamic
 import spock.timeout.BaseTimeoutExtensionSpecification
 
 import java.time.Duration
@@ -35,7 +36,7 @@ class GlobalTimeoutExtension extends BaseTimeoutExtensionSpecification {
                 expect: true
             }
         }
-        
+
         class B extends A {
             def "normal test"() {
                 expect: true
@@ -56,7 +57,7 @@ class GlobalTimeoutExtension extends BaseTimeoutExtensionSpecification {
         def "$fixtureMethod"() {
             Thread.sleep 99999999999
         }
-        
+
         def "a test"() {
             expect: true
         }
@@ -80,7 +81,7 @@ class GlobalTimeoutExtension extends BaseTimeoutExtensionSpecification {
                 Thread.sleep 99999999999
             }
         }
-        
+
         class B extends A {
             def "normal test"() {
                 expect: true
@@ -103,8 +104,8 @@ class GlobalTimeoutExtension extends BaseTimeoutExtensionSpecification {
     runner.runSpecBody("""
         @Timeout(value = 10, unit = SECONDS)
         def "a test"() {
-            given: 
-            
+            given:
+
             Thread.sleep 100
             expect: true
         }
@@ -125,21 +126,21 @@ class GlobalTimeoutExtension extends BaseTimeoutExtensionSpecification {
           def setupSpec() {
               Thread.sleep 25
           }
-          
+
           def setup() {
               Thread.sleep 25
           }
-        
+
           def "a test"() {
-              given: 
+              given:
               Thread.sleep 25
               expect: true
           }
-          
+
           def cleanup() {
               Thread.sleep 25
           }
-          
+
           def cleanupSpec() {
               Thread.sleep 25
           }
@@ -159,19 +160,19 @@ class GlobalTimeoutExtension extends BaseTimeoutExtensionSpecification {
         def setupSpec() {
             Thread.sleep 25
         }
-        
+
         def setup() {
             Thread.sleep 25
         }
-      
+
         def "a test"() {
             expect: true
         }
-        
+
         def cleanup() {
             Thread.sleep 25
         }
-        
+
         def cleanupSpec() {
             Thread.sleep 25
         }
@@ -181,6 +182,7 @@ class GlobalTimeoutExtension extends BaseTimeoutExtensionSpecification {
     noExceptionThrown()
   }
 
+  @SpockCompileDynamic
   def enableGlobalTimeout(boolean applyToFixtureMethods = false, Duration globalTimeoutDuration = Duration.ofNanos(1)) {
     runner.configurationScript {
       timeout {

@@ -1,5 +1,6 @@
 package org.spockframework.smoke.extension
 
+import org.junit.platform.launcher.listeners.TestExecutionSummary.Failure
 import org.spockframework.EmbeddedSpecification
 import org.spockframework.runtime.ConditionNotSatisfiedError
 import org.spockframework.runtime.SpockMultipleFailuresError
@@ -85,7 +86,7 @@ def bar() {
     featureCounter.get() == 4
   }
 
-  def "@Retry mode #mode executes setup and cleanup #expectedCount times (parallel: #parallel)"(String mode, int expectedCount) {
+  def "@Retry mode #mode executes setup and cleanup #expectedCount times (parallel: #parallel)"(String mode, int expectedCount, boolean parallel) {
     given:
     withParallelExecution(parallel)
 
@@ -164,12 +165,22 @@ def foo() {
 
     then:
     result.failures.size() == 2
-    result.failures.collect { it.exception.getClass() } =~ [SpockMultipleFailuresError]
-    result.failures.collect { it.exception.failures.size() } =~ [4]
-    result.failures.collectMany { it.exception.failures*.getClass() } =~ [ConditionNotSatisfiedError]
+    result.failures.collect { Failure it ->
+      it.exception.getClass()
+    } =~ [SpockMultipleFailuresError]
+    result.failures.collect { Failure it ->
+      with(it.exception, SpockMultipleFailuresError) {
+        failures.size()
+      }
+    } =~ [4]
+    result.failures.collectMany { Failure it ->
+      with(it.exception, SpockMultipleFailuresError) {
+        failures*.getClass()
+      }
+    } =~ [ConditionNotSatisfiedError]
   }
 
-  def "@Retry mode #mode executes setup and cleanup #expectedCount times for @Unroll'ed feature (parallel: #parallel)"(String mode, int expectedCount) {
+  def "@Retry mode #mode executes setup and cleanup #expectedCount times for @Unroll'ed feature (parallel: #parallel)"(String mode, int expectedCount, boolean parallel) {
     given:
     withParallelExecution(parallel)
 
@@ -712,6 +723,7 @@ def bar(baz) {
     extensionCounter.get() == 4
   }
 
+  @SpockCompileDynamic
   private def withParallelExecution(boolean enableParallelExecution) {
     runner.configurationScript {
       runner {

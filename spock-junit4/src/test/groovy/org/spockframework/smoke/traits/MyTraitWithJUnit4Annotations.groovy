@@ -15,14 +15,17 @@
 */
 package org.spockframework.smoke.traits
 
+import groovy.transform.CompileDynamic
 import org.junit.*
 
 trait MyTraitWithJUnit4Annotations {
+  @CompileDynamic
   @Before
   void before() {
     beforeEvaluated = true
   }
 
+  @CompileDynamic
   @After
   void after() {
     afterEvaluated = true

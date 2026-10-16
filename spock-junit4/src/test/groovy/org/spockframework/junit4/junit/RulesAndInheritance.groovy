@@ -20,6 +20,7 @@ import org.junit.rules.TestName
 import spock.lang.Issue
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 
 @Issue("https://github.com/spockframework/spock/issues/220")
 class RulesAndInheritance extends RulesAndInheritanceBase {
@@ -42,6 +43,7 @@ class RulesAndInheritance extends RulesAndInheritanceBase {
   }
 }
 
+@SpockCompileDynamic
 abstract class RulesAndInheritanceBase extends Specification {
   @Rule
   TestName name = new TestName()

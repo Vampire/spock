@@ -15,6 +15,7 @@
 
 package org.spockframework.docs.interaction
 
+import org.spockframework.mock.IMockInvocation
 import org.spockframework.runtime.model.parallel.Resources
 import spock.lang.Issue
 import spock.lang.ResourceLock
@@ -61,7 +62,12 @@ class GlobalMockDocSpec extends Specification {
     given:
     GroovyMock(global: true, RealSubscriber) {
       //Allow that the real constructor is called
-      new RealSubscriber(*_) >> { callRealMethod() }
+      new RealSubscriber(*_) >> {
+        // end::global-mock-constructor-real[]
+        IMockInvocation inv -> inv.
+        // tag::global-mock-constructor-real[]
+        callRealMethod()
+      }
     }
     when:
     def sub = new RealSubscriber()

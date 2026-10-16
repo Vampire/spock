@@ -177,9 +177,9 @@ class EmbeddedSpecCompiler {
       def errors = e.errorCollector.errors
       if (unwrapCompileException && errors.every { it.hasProperty("cause") })
         if (errors.size() == 1)
-          throw errors[0].cause
+          throw (errors[0] as Exception).cause
         else
-          throw new MultipleFailuresError("Errors during compile", errors.cause)
+          throw new MultipleFailuresError("Errors during compile", (errors as Exception).cause as List<Throwable>)
 
       throw e
     }

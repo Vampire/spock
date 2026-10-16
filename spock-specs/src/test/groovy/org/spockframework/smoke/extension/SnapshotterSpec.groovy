@@ -59,8 +59,10 @@ class SnapshotterSpec extends Specification {
     ]
   }
 
+  //TODO: Why? Can we fix this?
+  @SpockCompileDynamic
   @Unroll("safeName calculation [#iterationIndex]")
-  def "safeName calculation"() {
+  def "safeName calculation"(int iterationIndex, String extension, String snapshotId) {
     given:
     def featureInfo = new FeatureInfo().tap {
       name = featureName
@@ -88,6 +90,8 @@ class SnapshotterSpec extends Specification {
     'a' * 300   | 100            | 'txt'     | 'a longer snapshot id' | 'a' * 215 + '-a_longer_snapshot_id-0_1-[100].txt'
   }
 
+  //TODO: Why? Can we fix this?
+  @SpockCompileDynamic
   def "snapshotId is limited to 100 characters"() {
     when:
     Snapshotter.Store.calculateSafeUniqueName('txt', Stub(IterationInfo), "a" * 101)
@@ -99,7 +103,7 @@ class SnapshotterSpec extends Specification {
 
   @ResourceLock(Resources.SYSTEM_OUT)
   @ResourceLock(Resources.SYSTEM_ERR)
-  def "snapshotter stores .actual file on mismatch and deletes it on a successful match"() {
+  def "snapshotter stores .actual file on mismatch and deletes it on a successful match"(String snapshotId) {
     given:
     String actualPath
     def updatingSnapshotter = new Snapshotter(new Snapshotter.Store(specificationContext.currentIteration, tmpDir, true, false, 'txt', StandardCharsets.UTF_8))
@@ -122,7 +126,7 @@ class SnapshotterSpec extends Specification {
     then:
     thrown(ConditionNotSatisfiedError)
     1 * listener.standardErr(_) >> { String msg ->
-      actualPath = msg.find(/Snapshot actual value has been saved to: (.*)/) { it[1] }
+      actualPath = msg.find(/Snapshot actual value has been saved to: (.*)/) { List it -> it[1] }
     }
 
     and:

@@ -14,10 +14,15 @@ class SpecInfoHierarchySpec extends Specification {
   @Shared def child
   @Shared def grandchild
 
-  @Shared hierarchy
+  @Shared List hierarchy
   @Shared hierarchyNames = ["grandparent", "parent", "middle", "child", "grandchild"]
 
   def setupSpec() {
+    (grandparent, parent, middle, child, grandchild) = specsTopToBottom
+    hierarchy = [grandparent, parent, middle, child, grandchild]
+  }
+
+  Tuple5 getSpecsTopToBottom() {
     def classes = new EmbeddedSpecCompiler().compile("""import spock.lang.Specification
 class Grandparent extends  Specification {}
 class Parent extends Grandparent {}
@@ -27,9 +32,8 @@ class Grandchild extends Child {}
 """)
 
     def grandchildClass = classes.find { it.simpleName == 'Grandchild' }
-    def specInfo = new SpecInfoBuilder(grandchildClass).build()
-    (grandparent, parent, middle, child, grandchild) = specInfo.getSpecsTopToBottom()
-    hierarchy = [grandparent, parent, middle, child, grandchild]
+    SpecInfo specInfo = new SpecInfoBuilder(grandchildClass).build()
+    return specInfo.getSpecsTopToBottom() as Tuple5
   }
 
   @Unroll("#name")

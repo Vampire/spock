@@ -21,6 +21,7 @@ import org.spockframework.runtime.SpockComparisonFailure
 import spock.lang.Issue
 import spock.lang.Requires
 import spock.lang.ResourceLock
+import spock.lang.SpockCompileDynamic
 
 import java.sql.Date
 
@@ -94,6 +95,7 @@ a.get(b) == null
     }
   }
 
+  @SpockCompileDynamic
   void "MethodCallExpression with GString method"() {
     expect:
     isRendered """

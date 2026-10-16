@@ -60,7 +60,7 @@ def foo() {
     """
 
     then:
-    result.testEvents().started().list().testDescriptor.displayName == ["foo"] + (0..2).collect {"foo [x: ${it + 1}, #$it]" }
+    result.testEvents().started().list().testDescriptor.displayName == ["foo"] + (0..2).collect { int it -> "foo [x: ${it + 1}, #$it]" as String }
   }
 
   def "if creation of a data provider fails, feature isn't unrolled"() {
@@ -166,6 +166,7 @@ def foo() {
                                                                         "one x: 3, y: c, #2 two"]
   }
 
+  @SpockCompileDynamic
   def "old iteration naming is restorable using configuration script"() {
     given:
     runner.configurationScript {
@@ -192,6 +193,7 @@ def foo() {
                                                                         "foo[2]"]
   }
 
+  @SpockCompileDynamic
   def "default iteration naming is configurable using configuration script"() {
     given:
     runner.configurationScript {
@@ -218,6 +220,7 @@ def foo() {
                                                                         "foo"]
   }
 
+  @SpockCompileDynamic
   def "includeFeatureNameForIterations is configurable using configuration script"() {
     given:
     runner.configurationScript {
@@ -321,6 +324,7 @@ def foo() {
                                                                         "one 4 two"]
   }
 
+  @SpockCompileDynamic
   def "expressions in naming pattern that can't be evaluated are prefixed with '#Error:' if expressions asserting is disabled"() {
     given:
     runner.configurationScript {
@@ -422,6 +426,7 @@ class Foo extends Specification {
                                                                         "fred"]
   }
 
+  @SpockCompileDynamic
   def "method-level unroll annotation wins over configuration script"() {
     given:
     runner.configurationScript {
@@ -446,6 +451,7 @@ def method() {
                                                                         "fred"]
   }
 
+  @SpockCompileDynamic
   def "class-level unroll annotation wins over configuration script"() {
     given:
     runner.configurationScript {
@@ -472,6 +478,7 @@ class Foo extends Specification {
                                                                         "fred"]
   }
 
+  @SpockCompileDynamic
   def "unroll annotations are not inheritable"() {
     given:
     runner.configurationScript {

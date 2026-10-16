@@ -22,9 +22,10 @@ import spock.lang.Issue
 import spock.lang.Requires
 import spock.lang.ResourceLock
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 
 class GroovyMocksForInterfaces extends Specification {
-  def person = GroovyMock(Person)
+  Person person = GroovyMock()
 
   def "physical method"() {
     when:
@@ -34,6 +35,7 @@ class GroovyMocksForInterfaces extends Specification {
     1 * person.sing("song")
   }
 
+  @SpockCompileDynamic
   def "dynamic method"() {
     when:
     person.greet("henry")
@@ -64,6 +66,7 @@ class GroovyMocksForInterfaces extends Specification {
     1 * person.name
   }
 
+  @SpockCompileDynamic
   def "get dynamic property"() {
     when:
     person.age
@@ -100,6 +103,7 @@ class GroovyMocksForInterfaces extends Specification {
     1 * person.setName("fred")
   }
 
+  @SpockCompileDynamic
   def "set dynamic property"() {
     when:
     person.age = 42
@@ -130,7 +134,7 @@ class GroovyMocksForInterfaces extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/2131")
-  def "Boolean is getters shall be mockable"() {
+  def "Boolean is getters shall be mockable"(BooleanGetters m) {
     expect:
     m.booleanValue
     m.isBooleanValue()
@@ -149,6 +153,7 @@ class GroovyMocksForInterfaces extends Specification {
   /**
    * Verify that a boxed Boolean is getter does not have a property representation in Groovy >= 4.
    */
+  @SpockCompileDynamic
   @Requires({ GroovyRuntimeUtil.MAJOR_VERSION >= 4 })
   def "Boolean boxed is getters Groovy >=4 semantic check"() {
     given:
@@ -167,6 +172,7 @@ class GroovyMocksForInterfaces extends Specification {
   /**
    * Verify that a boxed Boolean is getter does have a property representation in Groovy <= 3.
    */
+  @SpockCompileDynamic
   @Requires({ GroovyRuntimeUtil.MAJOR_VERSION <= 3 })
   def "Boolean boxed is getters Groovy <= 3 semantic check"() {
     given:
@@ -178,6 +184,7 @@ class GroovyMocksForInterfaces extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/2131")
+  @SpockCompileDynamic
   @Requires({ GroovyRuntimeUtil.MAJOR_VERSION >= 4 })
   def "Boolean boxed is getters is not mockable Groovy >= 4"() {
     given:
@@ -196,6 +203,7 @@ class GroovyMocksForInterfaces extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/2131")
+  @SpockCompileDynamic
   @Requires({ GroovyRuntimeUtil.MAJOR_VERSION <= 3 })
   def "Boolean boxed is getters shall be mockable Groovy <= 3"() {
     expect:
@@ -215,6 +223,7 @@ class GroovyMocksForInterfaces extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/2131")
+  @SpockCompileDynamic
   def "Boolean get getters shall be mockable"() {
     expect:
     m.isBooleanValue
@@ -232,6 +241,7 @@ class GroovyMocksForInterfaces extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/2131")
+  @SpockCompileDynamic
   def "Boolean boxed get getters shall be mockable"() {
     expect:
     m.isBooleanValueBoxed

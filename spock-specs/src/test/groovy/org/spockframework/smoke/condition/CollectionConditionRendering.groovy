@@ -17,6 +17,8 @@ package org.spockframework.smoke.condition
 
 import spock.lang.Issue
 
+import java.util.regex.Matcher
+
 class CollectionConditionRendering extends ConditionRenderingSpec {
   def "nested lenient matching"() {
     expect:
@@ -46,7 +48,7 @@ false
     """, {
       def x = 'foo'
       def y = /./
-      assert (x =~ y).count == 0
+      assert ((x =~ y) as Matcher).count == 0
     }
   }
 
@@ -68,7 +70,7 @@ Foo on executor-1
 Bar on executor-2
 Baz on executor-1
 '''
-      assert (output =~ /on (executor-\d+)/).collect { it[1] }.unique().size() == 3
+      assert (output =~ /on (executor-\d+)/).collect { List matchResult -> matchResult[1] }.unique().size() == 3
     }
   }
 

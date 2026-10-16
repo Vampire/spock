@@ -19,10 +19,12 @@ package org.spockframework.idea
 import spock.lang.Ignore
 import spock.lang.Rollup
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 import spock.lang.Unroll
 
 // tested with IDEA 12.0.1
 @Ignore
+@SpockCompileDynamic
 class IntelliJIdeaSpec extends Specification {
   // both inference and formatting work
   @Rollup

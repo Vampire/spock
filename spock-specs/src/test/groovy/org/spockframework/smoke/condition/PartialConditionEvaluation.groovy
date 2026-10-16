@@ -17,6 +17,7 @@
 package org.spockframework.smoke.condition
 
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 
 /**
  * Tests whether we are able to handle the situation where some expressions
@@ -25,6 +26,7 @@ import spock.lang.Specification
  * @author Peter Niederwieser
  */
 class PartialConditionEvaluation extends Specification {
+  @SpockCompileDynamic
   def "test"() {
     expect: ((false && true) ^ (true || bar(x, y, z)))
   }

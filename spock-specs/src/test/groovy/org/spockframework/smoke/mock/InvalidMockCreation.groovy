@@ -20,6 +20,7 @@ import org.codehaus.groovy.runtime.typehandling.GroovyCastException
 import org.spockframework.EmbeddedSpecification
 import org.spockframework.runtime.InvalidSpecException
 import spock.lang.Ignore
+import spock.lang.SpockCompileDynamic
 
 /**
  * @author Peter Niederwieser
@@ -69,7 +70,7 @@ def foo() { expect: true }
     thrown(InvalidSpecException)
   }
 
-  @Ignore("TODO: doesn't throw an exception in Groovy 2.0")
+  @SpockCompileDynamic
   def "local w/ incompatible type"() {
     when:
     List list = Mock(Map)
@@ -78,6 +79,7 @@ def foo() { expect: true }
     thrown(GroovyCastException)
   }
 
+  @SpockCompileDynamic
   def "local w/ wrong argument"() {
     when:
     def list = Mock(1)
@@ -94,6 +96,7 @@ def foo() { expect: true }
     thrown(InvalidSpecException)
   }
 
+  @SpockCompileDynamic
   def "expr w/ wrong argument"() {
     when:
     Mock(1)

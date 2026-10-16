@@ -16,6 +16,8 @@
 
 package org.spockframework.smoke.extension
 
+import org.spockframework.runtime.extension.builtin.PreconditionContext
+
 import java.util.concurrent.CountDownLatch
 
 import org.spockframework.runtime.SpockTimeoutError
@@ -113,13 +115,13 @@ class TimeoutExtension extends BaseTimeoutExtensionSpecification {
     then:
     result.failures.size() == 2
 
-    def e1 = result.failures[0].exception
-    e1 instanceof SpockTimeoutError
-    e1.timeout == 0.25
+    with(result.failures.first().exception, SpockTimeoutError) {
+      timeout == 0.25
+    }
 
-    def e2 = result.failures[1].exception
-    e2 instanceof SpockTimeoutError
-    e2.timeout == 0.1
+    with(result.failures[1].exception, SpockTimeoutError) {
+      timeout == 0.1
+    }
   }
 
   @Issue("https://github.com/spockframework/spock/issues/303")
@@ -154,6 +156,7 @@ class TimeoutExtension extends BaseTimeoutExtensionSpecification {
     assertThreadDumpsCaptured(2, 0, false)
   }
 
+  @SpockCompileDynamic
   def "can capture thread dumps on interrupt attempts"() {
     given:
     runner.configurationScript {
@@ -170,6 +173,7 @@ class TimeoutExtension extends BaseTimeoutExtensionSpecification {
     assertThreadDumpsCaptured(2, 2, false)
   }
 
+  @SpockCompileDynamic
   def "can set the maximum number of interrupt attempts with thread dump captured"() {
     given:
     runner.configurationScript {
@@ -187,6 +191,7 @@ class TimeoutExtension extends BaseTimeoutExtensionSpecification {
     assertThreadDumpsCaptured(2, 1, true)
   }
 
+  @SpockCompileDynamic
   def "can capture thread dumps using jstack"() {
     given:
     runner.configurationScript {
@@ -204,6 +209,7 @@ class TimeoutExtension extends BaseTimeoutExtensionSpecification {
     assertThreadDumpsCaptured(2, 2, false, ThreadDumpUtilityType.JSTACK)
   }
 
+  @SpockCompileDynamic
   def "notifies custom interrupt listeners"() {
     given:
     List<Runnable> someListeners = [Mock(Runnable), Mock(Runnable)]
@@ -233,6 +239,7 @@ class TimeoutExtension extends BaseTimeoutExtensionSpecification {
     outputListener.count('inline interrupt listener') == 2
   }
 
+  @SpockCompileDynamic
   def "excludes dump-capturing thread from thread dumps"() {
     given:
     runner.configurationScript {
@@ -250,6 +257,7 @@ class TimeoutExtension extends BaseTimeoutExtensionSpecification {
     outputListener.count(/"[spock.lang.Timeout] Watcher for method 'foo'" #/) == 0
   }
 
+  @SpockCompileDynamic
   @RestoreSystemProperties
   def "does not fail if thread dump capturing util is not available"() {
     given:
@@ -273,6 +281,7 @@ class TimeoutExtension extends BaseTimeoutExtensionSpecification {
     }
   }
 
+  @SpockCompileDynamic
   @RestoreSystemProperties
   def "does not fail if java home is not set"() {
     given:
@@ -298,7 +307,7 @@ class TimeoutExtension extends BaseTimeoutExtensionSpecification {
 
   @Timeout(1)
   @IgnoreIf(
-      value = { jvm.java21Compatible },
+      value = { PreconditionContext pc -> pc.jvm.java21Compatible },
       reason = "The TimeoutExtension uses virtual threads if available, which can't be enumerated"
   )
   def "watcher thread has descriptive name"() {
@@ -307,6 +316,6 @@ class TimeoutExtension extends BaseTimeoutExtensionSpecification {
     group.enumerate(threads)
 
     expect:
-    threads.find { it.name == "[spock.lang.Timeout] Watcher for method 'watcher thread has descriptive name'" }
+    threads.find { Thread it -> it.name == "[spock.lang.Timeout] Watcher for method 'watcher thread has descriptive name'" }
   }
 }

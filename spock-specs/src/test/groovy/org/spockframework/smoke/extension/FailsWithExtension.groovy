@@ -23,6 +23,7 @@ import spock.lang.FailsWith
 import spock.lang.Specification
 
 import org.spockframework.runtime.SpockComparisonFailure
+import spock.lang.SpockCompileDynamic
 
 /**
  *
@@ -83,6 +84,7 @@ java.lang.RuntimeException: Not my message"""
 
   }
 
+  @SpockCompileDynamic
   @FailsWith(ConditionFailedWithExceptionError)
   def "can handle ConditionFailedWithExceptionError"() {
     when:
@@ -92,6 +94,7 @@ java.lang.RuntimeException: Not my message"""
     a.b.c.size()
   }
 
+  @SpockCompileDynamic
   @FailsWith(NullPointerException)
   def "can handle cause of ConditionFailedWithExceptionError"() {
     when:
@@ -116,6 +119,7 @@ class FailsWithOnSpec extends Specification {
     foo.get(1)
   }
 
+  @SpockCompileDynamic
   @FailsWith(NullPointerException)
   def ex3() {
     given:

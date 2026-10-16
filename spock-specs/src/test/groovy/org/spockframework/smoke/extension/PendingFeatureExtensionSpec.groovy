@@ -521,7 +521,7 @@ def bar() {
           message('All iterations were aborted'),
           cause(
             instanceOf(MultipleFailuresError),
-            new Condition<>({ it.failures*.message == ['ignored because I can'] * 3 }, 'failures match')
+            new Condition<>({ MultipleFailuresError mfe -> mfe.failures*.message == ['ignored because I can'] * 3 }, 'failures match')
           )
         )
       )

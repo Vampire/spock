@@ -1,4 +1,15 @@
 #!/bin/sh
-for var in 2.5 3.0 4.0 5.0; do
+
+if [ "$1" = "--continue-on-error" ]; then
+  shift
+else
+  set -euo pipefail
+  shopt -s inherit_errexit
+fi
+
+#for var in 2.5 3.0 4.0 5.0; do
+for var in 5.0 4.0 3.0 2.5; do
+    echo
+    echo "Variant: $var"
     ./gradlew -Dvariant="$var" "$@"
 done

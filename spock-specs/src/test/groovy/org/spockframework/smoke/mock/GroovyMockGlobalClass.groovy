@@ -15,10 +15,12 @@
 
 package org.spockframework.smoke.mock
 
+import groovy.transform.CompileDynamic
 import org.spockframework.runtime.model.parallel.Resources
 import spock.lang.Issue
 import spock.lang.ResourceLock
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 
 @ResourceLock(
   value = Resources.META_CLASS_REGISTRY,
@@ -32,7 +34,7 @@ class GroovyMockGlobalClass extends Specification {
     GroovySpy(ClassB, global: true)
   }
 
-
+  @SpockCompileDynamic
   def "Wildcard matching for static class methods returns correct results"() {
     given:
     def service = new Subject()
@@ -46,6 +48,7 @@ class GroovyMockGlobalClass extends Specification {
 }
 
 class Subject {
+  @CompileDynamic
   void myMethodUnderTest() {
     assert ClassA.get(1) instanceof ClassA
     assert ClassB.get(2) instanceof ClassB

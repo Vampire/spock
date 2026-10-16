@@ -18,12 +18,14 @@ package org.spockframework.mock
 
 import spock.lang.Issue
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 
 import java.util.function.IntSupplier
 
 class AdditionalInterfaceResponseSpec extends Specification {
 
   @Issue("https://github.com/spockframework/spock/issues/1405")
+  @SpockCompileDynamic
   def "Defining responses for additionalInterfaces for Groovy class"() {
     given:
     A a = Stub(additionalInterfaces: [B]) {
@@ -42,6 +44,7 @@ class AdditionalInterfaceResponseSpec extends Specification {
     a.methodFromIf() == "Result"
   }
 
+  @SpockCompileDynamic
   def "Defining responses for additionalInterfaces for Groovy class with GroovyStub"() {
     given:
     A a = GroovyStub(additionalInterfaces: [B]) {
@@ -61,6 +64,7 @@ class AdditionalInterfaceResponseSpec extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/1405")
+  @SpockCompileDynamic
   def "Defining responses for additionalInterfaces for Groovy interface"() {
     given:
     C c = Stub(additionalInterfaces: [B]) {
@@ -79,6 +83,7 @@ class AdditionalInterfaceResponseSpec extends Specification {
     c.methodFromIf() == "ResultB"
   }
 
+  @SpockCompileDynamic
   def "Defining responses for additionalInterfaces for Groovy interface with GroovyStub"() {
     given:
     C c = GroovyStub(additionalInterfaces: [B]) {
@@ -98,6 +103,7 @@ class AdditionalInterfaceResponseSpec extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/1405")
+  @SpockCompileDynamic
   def "Defining responses for additionalInterfaces for Java classes"() {
     given:
     ArrayList a = Stub(additionalInterfaces: [IntSupplier]) {

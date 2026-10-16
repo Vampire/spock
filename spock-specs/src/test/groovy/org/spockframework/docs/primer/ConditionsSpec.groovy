@@ -3,6 +3,7 @@ package org.spockframework.docs.primer
 import org.spockframework.runtime.ConditionNotSatisfiedError
 import org.spockframework.smoke.condition.ConditionRenderingSpec
 import spock.lang.FailsWith
+import spock.lang.SpockCompileDynamic
 
 class ConditionsSpec extends ConditionRenderingSpec {
 
@@ -61,6 +62,7 @@ foobar
     })
   }
 
+  @SpockCompileDynamic
   @FailsWith(ConditionNotSatisfiedError)
   def "using each-assert fails normally"(){
     given:
@@ -71,6 +73,7 @@ foobar
     // end::each-assert-normal[]
   }
 
+  @SpockCompileDynamic
   def "using each-assert with opt-out passes"(){
     given:
     def aList = []

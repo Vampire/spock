@@ -21,10 +21,12 @@ import org.spockframework.runtime.model.parallel.ExecutionMode
 import spock.lang.Isolated
 import spock.lang.Requires
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
+@SpockCompileDynamic
 class UseOnMethods extends Specification {
   // can be applied to a fixture method
   @Use(StringExtensions)
@@ -86,6 +88,7 @@ class UseOnMethods extends Specification {
 @Isolated("Isolate from other tests to have full access to cores for the embedded tests.")
 @Requires({ Runtime.runtime.availableProcessors() >= 2 })
 class IsolatedUseSpec extends EmbeddedSpecification {
+  @SpockCompileDynamic
   def setup() {
     runner.addClassImport(Use)
     runner.addClassImport(CountDownLatch)
@@ -146,6 +149,7 @@ class IsolatedUseSpec extends EmbeddedSpecification {
   }
 }
 
+@SpockCompileDynamic
 @Use(StringExtensions)
 class UseOnClasses extends Specification {
   // affects fixture methods

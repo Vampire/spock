@@ -20,6 +20,11 @@ class ParallelSpec extends EmbeddedSpecification {
     runner.addClassImport(ResourceAccessMode)
     runner.addClassImport(ExecutionMode)
     runner.addClassMemberImport(ParallelSpec)
+    withParallelExecution()
+  }
+
+  @SpockCompileDynamic
+  private withParallelExecution() {
     runner.configurationScript {
       runner {
         optimizeRunOrder false

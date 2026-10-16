@@ -17,6 +17,7 @@
 package org.spockframework.smoke.mock
 
 import spock.lang.Issue
+import spock.lang.SpockCompileDynamic
 
 import static spock.util.matcher.HamcrestMatchers.closeTo
 
@@ -167,6 +168,7 @@ class PartialMockingInterfacesWithDefaultMethods extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/1516")
+  @SpockCompileDynamic
   def "Partial mocking for methods inherited from Object works"() {
     given:
     IQuarterlyCompoundedDeposit deposit = Spy()

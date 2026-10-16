@@ -18,7 +18,7 @@ import org.spockframework.mock.*
 import spock.lang.*
 
 class GroovyMocksForGroovyClasses extends Specification {
-  def person = GroovyMock(Person)
+  Person person = GroovyMock()
 
   def "physical method"() {
     when:
@@ -37,6 +37,7 @@ class GroovyMocksForGroovyClasses extends Specification {
     1 * person.sing('song1')
   }
 
+  @SpockCompileDynamic
   def "final physical method"() {
     def finalPerson = GroovyMock(clazz)
 
@@ -50,6 +51,7 @@ class GroovyMocksForGroovyClasses extends Specification {
     clazz << [FinalPerson, FinalMethodsPerson, FinalJavaPerson, FinalMethodsJavaPerson]
   }
 
+  @SpockCompileDynamic
   def "dynamic method"() {
     when:
     person.greet("henry")
@@ -74,6 +76,7 @@ class GroovyMocksForGroovyClasses extends Specification {
     1 * person.sing("song")
   }
 
+  @SpockCompileDynamic
   def "dynamic method via GroovyObject.invokeMethod"() {
     when:
     person.invokeMethod("greet", ["henry", "freddy"] as Object[])
@@ -104,6 +107,7 @@ class GroovyMocksForGroovyClasses extends Specification {
     1 * person.name
   }
 
+  @SpockCompileDynamic
   def "get final physical property"() {
     def finalPerson = GroovyMock(clazz)
 
@@ -123,6 +127,7 @@ class GroovyMocksForGroovyClasses extends Specification {
     clazz << [FinalPerson, FinalMethodsPerson, FinalJavaPerson, FinalMethodsJavaPerson]
   }
 
+  @SpockCompileDynamic
   def "get dynamic property"() {
     when:
     person.age
@@ -165,6 +170,7 @@ class GroovyMocksForGroovyClasses extends Specification {
     1 * person.name
   }
 
+  @SpockCompileDynamic
   def "get dynamic property via GroovyObject.getProperty"() {
     when:
     person.getProperty("age")
@@ -201,6 +207,7 @@ class GroovyMocksForGroovyClasses extends Specification {
     1 * person.setName("fred")
   }
 
+  @SpockCompileDynamic
   def "set dynamic property"() {
     when:
     person.age = 42
@@ -225,6 +232,7 @@ class GroovyMocksForGroovyClasses extends Specification {
     1 * person.setName("fred")
   }
 
+  @SpockCompileDynamic
   def "set dynamic property via GroovyObject.setProperty"() {
     when:
     person.setProperty("age", 42)
@@ -336,7 +344,3 @@ class GroovyMocksForGroovyClasses extends Specification {
     final void setName(String name) { throw new UnsupportedOperationException("setName") }
   }
 }
-
-
-
-

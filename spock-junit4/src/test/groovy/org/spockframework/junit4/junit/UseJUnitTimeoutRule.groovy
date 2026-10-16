@@ -14,12 +14,13 @@
 
 package org.spockframework.junit4.junit
 
-
 import spock.lang.Ignore
+import spock.lang.SpockCompileDynamic
 
 class UseJUnitTimeoutRule extends JUnitBaseSpec {
   def timeout
 
+  @SpockCompileDynamic
   def setup() {
     runner.configurationScript = {
       runner {

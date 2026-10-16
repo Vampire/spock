@@ -14,6 +14,8 @@
 
 package org.spockframework.smoke.mock
 
+import groovy.transform.CompileDynamic
+import org.spockframework.mock.IMockInvocation
 import org.spockframework.runtime.GroovyRuntimeUtil
 import spock.lang.*
 import spock.util.environment.Jvm
@@ -92,7 +94,7 @@ class GroovySpiesThatAreGlobal extends Specification {
     myList.add(1)
 
     then:
-    2 * myList.add(1) >> { callRealMethod() }
+    2 * myList.add(1) >> { IMockInvocation it -> it.callRealMethod() }
     myList.size() == 2
   }
 
@@ -105,11 +107,12 @@ class GroovySpiesThatAreGlobal extends Specification {
     myList.add(1)
 
     then:
-    2 * myList.add(1) >> { callRealMethodWithArgs(42) }
+    2 * myList.add(1) >> { IMockInvocation it -> it.callRealMethodWithArgs(42) }
     myList.size() == 2
     myList[1] == 42
   }
 
+  @SpockCompileDynamic
   def "mock dynamic instance method"() {
     def anyList = GroovySpy(ArrayList, global: true)
 
@@ -188,6 +191,7 @@ class GroovySpiesThatAreGlobal extends Specification {
     0 * _
   }
 
+  @SpockCompileDynamic
   def "mock dynamic static method"() {
     GroovySpy(Collections, global: true, useObjenesis: Jvm.current.java17Compatible)
 
@@ -215,7 +219,7 @@ class GroovySpiesThatAreGlobal extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/871")
-  def "type casts are not swallowed"() {
+  def "type casts are not swallowed"(Closure<String> action) {
     given:
     GroovySpy(PersonWithOverloadedMethods, global: true)
 
@@ -231,7 +235,7 @@ class GroovySpiesThatAreGlobal extends Specification {
   }
 
   @Issue("https://github.com/spockframework/spock/issues/871")
-  def "type casts are not swallowed when stubbing"() {
+  def "type casts are not swallowed when stubbing"(Closure<String> action) {
     given:
     GroovySpy(PersonWithOverloadedMethods, global: true)
     PersonWithOverloadedMethods.perform(_) >> "Foo"
@@ -247,6 +251,7 @@ class GroovySpiesThatAreGlobal extends Specification {
     _ | { PersonWithOverloadedMethods.perform((Pattern) null) }
   }
 
+  @SpockCompileDynamic
   def "Accessing non-existing property throws MissingPropertyException"() {
     when:
     Enclosing.Super.NON_EXISTING_FIELD
@@ -255,6 +260,7 @@ class GroovySpiesThatAreGlobal extends Specification {
     ex.message.contains("NON_EXISTING_FIELD")
   }
 
+  @SpockCompileDynamic
   def "Accessing non-existing property through global spy throws MissingPropertyException"() {
     given:
     GroovySpy(Enclosing.Super, global: true)
@@ -269,6 +275,7 @@ class GroovySpiesThatAreGlobal extends Specification {
     suppressed.message.contains("getNON_EXISTING_FIELD")
   }
 
+  @SpockCompileDynamic
   def "Accessing non-existing property setter throws MissingPropertyException"() {
     when:
     Enclosing.Super.NON_EXISTING_FIELD = ""
@@ -276,6 +283,7 @@ class GroovySpiesThatAreGlobal extends Specification {
     thrown(MissingPropertyException)
   }
 
+  @SpockCompileDynamic
   def "Accessing non-existing property setter through global spy throws MissingPropertyException"() {
     given:
     GroovySpy(Enclosing.Super, global: true)
@@ -307,6 +315,7 @@ class GroovySpiesThatAreGlobal extends Specification {
    * works identically when normal Groovy logic is used and when a global spy
    * intercepts but no stubbing was done.
    */
+  @SpockCompileDynamic
   def "Accessing real fields through global spy works like in reality"() {
     given:
     if (createSpies) {
@@ -1855,6 +1864,7 @@ class GroovySpiesThatAreGlobal extends Specification {
       }
     }
 
+    @CompileDynamic
     static class Sub extends Super {
       private static String SUB_STATIC_FIELD
       public static String PUBLIC_SUB_STATIC_FIELD
@@ -2084,10 +2094,12 @@ class GroovySpiesThatAreGlobal extends Specification {
         STATIC_PROPERTY = value
       }
 
+      @CompileDynamic
       def retrieveSuperField() {
         super.FIELD
       }
 
+      @CompileDynamic
       def overwriteSuperField(def value) {
         // `super.FIELD = value` is a compile error in Groovy <4
         // we work-around this by using `super."${"FIELD"}" = value` so that it is evaluated at runtime

@@ -109,6 +109,7 @@ class MatcherConditions extends EmbeddedSpecification {
     assert that(x, equalTo(42))
   }
 
+  @SpockCompileDynamic
   @FailsWith(MissingMethodException)
   def "can only be used where a condition is expected (1)"() {
     setup:

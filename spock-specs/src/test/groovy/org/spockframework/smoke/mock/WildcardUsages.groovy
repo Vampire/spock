@@ -110,7 +110,7 @@ class WildcardUsages extends Specification {
     list.equals(new Object())
     list.hashCode()
     list.toString()
-    list.finalize()
+    list.&finalize()
 
     then:
     0 * list._()
@@ -131,7 +131,7 @@ class WildcardUsages extends Specification {
     4 * overloaded._
   }
 
-  def "usage in interaction doesn't interfere with usage in where-block"() {
+  def "usage in interaction doesn't interfere with usage in where-block"(Class<List<Integer>> type) {
     def list = Mock(type)
 
     when:

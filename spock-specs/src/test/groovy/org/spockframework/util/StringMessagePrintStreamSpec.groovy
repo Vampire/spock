@@ -21,7 +21,7 @@ import spock.lang.Specification
 class StringMessagePrintStreamSpec extends Specification {
   def log
 
-  def notifier = new StringMessagePrintStream() {
+  StringMessagePrintStream notifier = new StringMessagePrintStream() {
     @Override
     protected void printed(String message) {
       log = message
@@ -30,7 +30,11 @@ class StringMessagePrintStreamSpec extends Specification {
 
   def "notifies write methods"() {
     when:
-    notifier.write(input)
+    if (input instanceof byte[]) {
+      notifier.write(input)
+    } else {
+      notifier.write(input as int)
+    }
 
     then:
     log == output
@@ -89,7 +93,11 @@ class StringMessagePrintStreamSpec extends Specification {
 
   def "notifies append methods"() {
     when:
-    notifier.append(input)
+    if (input instanceof CharSequence) {
+      notifier.append(input)
+    } else {
+      notifier.append(input as char)
+    }
 
     then:
     log == output
@@ -102,9 +110,9 @@ class StringMessagePrintStreamSpec extends Specification {
     "c" as char                     | "c"
   }
 
-  def log2 = []
+  List<String> log2 = []
 
-  def notifier2 = new StringMessagePrintStream() {
+  StringMessagePrintStream notifier2 = new StringMessagePrintStream() {
     @Override
     protected void printed(String message) {
       log2 << message

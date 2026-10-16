@@ -15,19 +15,24 @@
 */
 package org.spockframework.smoke.traits
 
+import groovy.transform.CompileDynamic
+
 trait MyTrait {
   int x = 10
 
-  def multiply(m, n) { m * n }
+  def multiply(int m, int n) { m * n }
 
+  @CompileDynamic
   def setup() {
     setupEvaluated = true
   }
 
+  @CompileDynamic
   def cleanup() {
     cleanupEvaluated = true
   }
 
+  @CompileDynamic
   def setupSpec() {
     setupSpecEvaluated = true
   }

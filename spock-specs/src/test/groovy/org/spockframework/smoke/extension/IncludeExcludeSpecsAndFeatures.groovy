@@ -15,6 +15,7 @@
 package org.spockframework.smoke.extension
 
 import org.spockframework.EmbeddedSpecification
+import spock.lang.SpockCompileDynamic
 
 class IncludeExcludeSpecsAndFeatures extends EmbeddedSpecification {
   List specs
@@ -37,13 +38,19 @@ class Spec extends Specification {
   """)
   }
 
-  def "include specs and features base on annotations"() {
+  @SpockCompileDynamic
+  private includeAndExcludeByAnnotations(includeAnnotations, excludeAnnotations) {
     runner.configurationScript = {
       runner {
-        include(*annTypes1)
-        exclude(*annTypes2)
+        include(*includeAnnotations)
+        exclude(*excludeAnnotations)
       }
     }
+  }
+
+  def "include specs and features base on annotations"() {
+    given:
+    includeAndExcludeByAnnotations(includeAnnotations, excludeAnnotations)
 
     when:
     def result = runner.runClasses(specs)
@@ -54,9 +61,9 @@ class Spec extends Specification {
     result.testsSkippedCount == 0
 
     where:
-    annTypes1   << [[Slow], [Slow], [Slow],       [Fast], [Fast], [Fast],       [Slow, Fast], [Slow, Fast], [Slow, Fast]]
-    annTypes2   << [[Slow], [Fast], [Slow, Fast], [Slow], [Fast], [Slow, Fast], [Slow],       [Fast],       [Slow, Fast]]
-    runCount    << [0,      1,      0,            1,      0,      0,            1,            1,            0           ]
-    ignoreCount << [1,      0,      1,            0,      1,      1,            0,            0,            1           ]
+    includeAnnotations << [[Slow], [Slow], [Slow],       [Fast], [Fast], [Fast],       [Slow, Fast], [Slow, Fast], [Slow, Fast]]
+    excludeAnnotations << [[Slow], [Fast], [Slow, Fast], [Slow], [Fast], [Slow, Fast], [Slow],       [Fast],       [Slow, Fast]]
+    runCount           << [0,      1,      0,            1,      0,      0,            1,            1,            0           ]
+    ignoreCount        << [1,      0,      1,            0,      1,      1,            0,            0,            1           ]
   }
 }

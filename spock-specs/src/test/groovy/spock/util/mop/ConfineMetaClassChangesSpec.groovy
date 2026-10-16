@@ -18,11 +18,13 @@ import org.spockframework.EmbeddedSpecification
 import org.spockframework.runtime.model.parallel.ExclusiveResource
 import org.spockframework.runtime.model.parallel.ResourceAccessMode
 import org.spockframework.runtime.model.parallel.Resources
+import spock.lang.SpockCompileDynamic
 import spock.lang.Stepwise
 
 /**
  * @author Luke Daley
  */
+@SpockCompileDynamic
 @Stepwise
 class ConfineMetaClassChangesSpec extends EmbeddedSpecification {
 

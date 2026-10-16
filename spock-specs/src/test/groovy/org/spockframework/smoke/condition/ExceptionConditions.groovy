@@ -214,6 +214,7 @@ Exception e = thrown(IOException)
   }
 
   @Issue("https://github.com/spockframework/spock/issues/260")
+  @SpockCompileDynamic
   @FailsWith(InvalidSpecException)
   def "(Java-style) exception condition must specify a type that is-a java.lang.Throwable"() {
     when:
@@ -333,7 +334,7 @@ Exception e = thrown(IOException)
     thrown(Exception)
   }
 
-  def foobar() {
+  Tuple2 foobar() {
     throw new IllegalStateException("foo")
   }
 

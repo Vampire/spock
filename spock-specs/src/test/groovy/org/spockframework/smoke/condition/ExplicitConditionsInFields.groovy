@@ -23,15 +23,16 @@ import spock.lang.*
  * @author Peter Niederwieser
  */
 class ExplicitConditionsInFields extends Specification {
-  def instanceField = { assert false }
-  @Shared sharedField = { assert false }
+  Closure<Void> instanceField = { assert false }
+  @Shared Closure<Void> sharedField = { assert false }
 
   @FailsWith(ConditionNotSatisfiedError)
   def "explicit condition in instance field"() {
     setup: instanceField()
-
   }
 
+  // SpockCompileDynamic can be removed if minimum Groovy version is 5
+  @SpockCompileDynamic
   @FailsWith(ConditionNotSatisfiedError)
   def "explicit condition in shared field"() {
     setup: sharedField()

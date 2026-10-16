@@ -100,6 +100,7 @@ class TempDirExtensionSpec extends EmbeddedSpecification {
     i << [0, 1]
   }
 
+  @SpockCompileDynamic
   def "define temp directory location using configuration script"() {
     given:
     def userDefinedBase = untypedPath.resolve("build")
@@ -171,8 +172,8 @@ def method1(@TempDir(cleanup = ${cleanupMode}) Path param) {
     then:
     result.testsSucceededCount == (testSucceeds ? 1 : 0)
     result.testsFailedCount == (testSucceeds ? 0 : 1)
-    pathFromEmbedded.forEach {
-      assert Files.exists(it) == expectKeep
+    verifyEach(pathFromEmbedded) {
+      Files.exists(it) == expectKeep
     }
 
     cleanup:
@@ -187,6 +188,7 @@ def method1(@TempDir(cleanup = ${cleanupMode}) Path param) {
     expectKeep = (!testSucceeds && cleanupMode == TempDir.CleanupMode.ON_SUCCESS) || cleanupMode == TempDir.CleanupMode.NEVER
   }
 
+  @SpockCompileDynamic
   @ResourceLock(Resources.SYSTEM_ERR)
   def "define cleanup using configuration script"(boolean testSucceeds, TempDir.CleanupMode cleanupMode, boolean expectKeep) {
     given:
@@ -274,7 +276,7 @@ class ParallelTempDirSpec extends Specification {
 
   @TempDir Path tmpDir
 
-  def "Try creating multiple dirs"() {
+  def "Try creating multiple dirs"(String name) {
     when:
     def dir = Files.createDirectory(tmpDir.resolve(name))
 

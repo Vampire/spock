@@ -227,6 +227,7 @@ class PublisherSpec extends Specification {
 // end::argConstraints[]
   }
 
+  @SpockCompileDynamic
   def "codeArg"() {
     when:
     publisher.send("foobar")

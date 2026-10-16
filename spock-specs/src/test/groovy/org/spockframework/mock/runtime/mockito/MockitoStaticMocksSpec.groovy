@@ -27,6 +27,7 @@ import org.spockframework.runtime.model.SpecInfo
 import spock.lang.Issue
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 import spock.mock.IMockMakerSettings
 import spock.mock.MockMakers
 
@@ -40,7 +41,7 @@ class MockitoStaticMocksSpec extends Specification {
   private static final String MOCK_VALUE2 = "MockValue2"
 
   @Shared
-  def mockUtil = new MockUtil()
+  MockUtil mockUtil = new MockUtil()
 
   def cleanup() {
     //Ensure that all static mocks where cleaned up
@@ -507,6 +508,7 @@ class MockitoStaticMocksSpec extends Specification {
 The syntax SpyStatic(StaticClass){} is not supported, please use SpyStatic(StaticClass) without a Closure instead.""")
   }
 
+  @SpockCompileDynamic
   def "SpyStatic with closure returning something shall produce nice error message"() {
     when:
     SpyStatic(StaticClass) {

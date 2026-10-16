@@ -3,14 +3,15 @@ package org.spockframework.docs.timeout
 import org.spockframework.runtime.SpockTimeoutError
 import org.spockframework.runtime.extension.builtin.ThreadDumpUtilityType
 import spock.lang.Isolated
+import spock.lang.SpockCompileDynamic
 import spock.timeout.BaseTimeoutExtensionSpecification
 
 @Isolated("The thread dump interferes with the parallel logging")
 class TimeoutConfigurationDoc extends BaseTimeoutExtensionSpecification {
 
-  def "thread dump capturing respects provided configuration"() {
-    given:
-    runner.configurationScript {
+  @SpockCompileDynamic
+  private initTimeoutSettings() {
+    runner.configurationScript = {
       // tag::example[]
       timeout {
         // java.time.Duration, default null: If set applies global timeout for all features, unless overridden
@@ -28,6 +29,11 @@ class TimeoutConfigurationDoc extends BaseTimeoutExtensionSpecification {
       }
       // end::example[]
     }
+  }
+
+  def "thread dump capturing respects provided configuration"() {
+    given:
+    initTimeoutSettings()
 
     when:
     runSpecWithInterrupts(3)

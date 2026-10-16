@@ -8,7 +8,7 @@ import groovy.lang.GString;
 import java.util.Locale;
 
 public class FailedStringComparisonRenderer implements ExpressionComparisonRenderer {
-  public static final long MAX_EDIT_DISTANCE_MEMORY = 50 * 1024;
+  public static final int MAX_EDIT_DISTANCE_MEMORY = 50 * 1024;
   @Override
   public String render(ExpressionInfo expr) {
     if (!(Boolean.FALSE.equals(expr.getValue()))) return null;
@@ -18,7 +18,7 @@ public class FailedStringComparisonRenderer implements ExpressionComparisonRende
     String str1 = expr.getChildren().get(0).getValue().toString();
     String str2 = expr.getChildren().get(1).getValue().toString();
 
-    if (((long)str1.length()) * str2.length() > MAX_EDIT_DISTANCE_MEMORY) {
+    if (str1.length() * str2.length() > MAX_EDIT_DISTANCE_MEMORY) {
       return tryReduceStringSizes(str1, str2);
     } else {
       return createAndRenderEditDistance(str1, str2);
@@ -43,11 +43,11 @@ public class FailedStringComparisonRenderer implements ExpressionComparisonRende
     end1++;
     end2++;
 
-    if (((long) end1-commonStart) * (end2-commonStart) > MAX_EDIT_DISTANCE_MEMORY) {
+    if ((end1-commonStart) * (end2-commonStart) > MAX_EDIT_DISTANCE_MEMORY) {
       return "false\nStrings too large to calculate edit distance.";
     } else {
       // Check if we can add some context
-      if (((long) end1 - commonStart + 20) * (end2 - commonStart + 20) < MAX_EDIT_DISTANCE_MEMORY){
+      if ((end1 - commonStart + 20) * (end2 - commonStart + 20) < MAX_EDIT_DISTANCE_MEMORY){
         commonStart = Math.max(0, commonStart - 10);
         end1 = Math.min(str1.length(), end1 + 10);
         end2 = Math.min(str2.length(), end2 + 10);

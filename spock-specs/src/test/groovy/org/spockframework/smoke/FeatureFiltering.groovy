@@ -18,8 +18,10 @@ import org.junit.platform.engine.discovery.DiscoverySelectors
 
 import org.spockframework.EmbeddedSpecification
 import spock.lang.Issue
+import spock.lang.SpockCompileDynamic
 
 class FeatureFiltering extends EmbeddedSpecification {
+  @SpockCompileDynamic
   def "filter selected feature methods"() {
     def clazz = compiler.compileSpecBody("""
 static log = ""

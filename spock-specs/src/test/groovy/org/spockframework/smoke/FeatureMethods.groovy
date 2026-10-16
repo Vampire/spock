@@ -18,11 +18,15 @@ package org.spockframework.smoke
 
 import spock.lang.*
 import spock.util.EmbeddedSpecRunner
+
+import java.lang.reflect.Method
+
 /**
  *
  * @author Peter Niederwieser
  */
 class FeatureMethods extends Specification {
+  @SpockCompileDynamic
   def "cannot be called from user code"() {
     when:
     featureMethod()
@@ -34,7 +38,7 @@ class FeatureMethods extends Specification {
   @Issue("https://github.com/spockframework/spock/issues/351")
   def "don't make it into the class file with their original name"() {
     expect:
-    !getClass().getDeclaredMethods().any { it.name == "featureMethod" }
+    !getClass().declaredMethods.any { Method it -> it.name == "featureMethod" }
   }
 
   def "are nevertheless reported with their original name"() {

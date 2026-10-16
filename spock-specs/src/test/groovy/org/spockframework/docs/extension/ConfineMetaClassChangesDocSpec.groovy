@@ -1,9 +1,11 @@
 package org.spockframework.docs.extension
 
 import spock.lang.Specification
+import spock.lang.SpockCompileDynamic
 import spock.lang.Stepwise
 import spock.util.mop.ConfineMetaClassChanges
 
+@SpockCompileDynamic
 // tag::example[]
 @Stepwise
 class ConfineMetaClassChangesDocSpec extends Specification {

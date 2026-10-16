@@ -15,6 +15,7 @@
 
 package org.spockframework.smoke
 
+import groovy.transform.CompileDynamic
 import org.spockframework.EmbeddedSpecification
 import org.spockframework.runtime.ConditionNotSatisfiedError
 import org.spockframework.runtime.ExpressionInfoValueRenderer
@@ -24,6 +25,7 @@ import org.spockframework.runtime.model.ExpressionInfo
 import org.spockframework.util.Identifiers
 
 import spock.lang.Issue
+import spock.lang.SpockCompileDynamic
 import spock.lang.Unroll
 
 import static java.util.Collections.emptyList
@@ -310,23 +312,26 @@ apackage.ASpec|a feature|2
     """
   }
 
+  //TODO: Why? Can we fix this?
+  @SpockCompileDynamic
   def 'stack traces are filtered on rendering expression info value'() {
     given:
     def expressionInfo = new ExpressionInfo(null, null, null, emptyList())
-    expressionInfo.value = new Exception()
-    expressionInfo.value.stackTrace = [
-      new StackTraceElement('org.codehaus.groovy.runtime.Foo', 'bar', null, 0),
-      new StackTraceElement('org.codehaus.groovy.reflection.Foo', 'bar', null, 0),
-      new StackTraceElement('org.codehaus.groovy.FooMetaClassBaz', 'bar', null, 0),
-      new StackTraceElement('groovy.FooMetaClassBaz', 'bar', null, 0),
-      new StackTraceElement('groovy.lang.MetaMethod', 'bar', null, 0),
-      new StackTraceElement('java.lang.reflect.Foo', 'bar', null, 0),
-      new StackTraceElement('java.lang.invoke.LambdaForm', 'invoke', null, 0),
-      new StackTraceElement('sun.reflect.Foo', 'bar', null, 0),
-      new StackTraceElement('jdk.internal.reflect.Foo', 'bar', null, 0),
-      new StackTraceElement('org.spockframework.runtime.Foo', 'bar', null, 0),
-      new StackTraceElement('org.spockframework.runtime.foo.Baz', 'bar', null, 0)
-    ]
+    expressionInfo.value = new Exception().tap {
+      stackTrace = [
+        new StackTraceElement('org.codehaus.groovy.runtime.Foo', 'bar', null, 0),
+        new StackTraceElement('org.codehaus.groovy.reflection.Foo', 'bar', null, 0),
+        new StackTraceElement('org.codehaus.groovy.FooMetaClassBaz', 'bar', null, 0),
+        new StackTraceElement('groovy.FooMetaClassBaz', 'bar', null, 0),
+        new StackTraceElement('groovy.lang.MetaMethod', 'bar', null, 0),
+        new StackTraceElement('java.lang.reflect.Foo', 'bar', null, 0),
+        new StackTraceElement('java.lang.invoke.LambdaForm', 'invoke', null, 0),
+        new StackTraceElement('sun.reflect.Foo', 'bar', null, 0),
+        new StackTraceElement('jdk.internal.reflect.Foo', 'bar', null, 0),
+        new StackTraceElement('org.spockframework.runtime.Foo', 'bar', null, 0),
+        new StackTraceElement('org.spockframework.runtime.foo.Baz', 'bar', null, 0)
+      ]
+    }
 
     when:
     ExpressionInfoValueRenderer.renderValue expressionInfo

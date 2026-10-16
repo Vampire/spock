@@ -18,13 +18,13 @@ package org.spockframework.docs.extension
 
 import org.spockframework.EmbeddedSpecification
 import org.spockframework.runtime.RunContext
+import spock.lang.SpockCompileDynamic
 import spock.mock.MockMakers
 
 class MockMakerConfigurationDocSpec extends EmbeddedSpecification {
 
-  @SuppressWarnings('UnnecessaryQualifiedReference')
-  def "preferredMockMaker configuration setting"() {
-    given:
+  @SpockCompileDynamic
+  private withByteBuddyPreferredMockMaker() {
     runner.configurationScript {
       // tag::mock-maker-preferredMockMaker[]
       mockMaker {
@@ -32,6 +32,12 @@ class MockMakerConfigurationDocSpec extends EmbeddedSpecification {
       }
       // end::mock-maker-preferredMockMaker[]
     }
+  }
+
+  @SuppressWarnings('UnnecessaryQualifiedReference')
+  def "preferredMockMaker configuration setting"() {
+    given:
+    withByteBuddyPreferredMockMaker()
     runner.addClassImport(RunContext)
     runner.addClassImport(MockMakers)
     runner.runFeatureBody("""

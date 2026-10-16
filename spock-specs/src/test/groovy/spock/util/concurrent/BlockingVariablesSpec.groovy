@@ -19,6 +19,7 @@ import org.spockframework.runtime.SpockTimeoutError
 
 import spock.lang.*
 
+@SpockCompileDynamic
 class BlockingVariablesSpec extends Specification {
   @Retry
   //Flaky execution on build-and-verify (windows-latest) machine
